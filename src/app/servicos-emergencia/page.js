@@ -1,28 +1,44 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import React, { useEffect } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import icon from "leaflet/dist/images/marker-icon.png";
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+
+// Configuração do ícone padrão do Leaflet
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+});
 
 export default function Home() {
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-
-  // Obter localização do usuário
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLatitude(position.coords.latitude);
-          setLongitude(position.coords.longitude);
-        },
-        (error) => {
-          console.error("Erro ao obter localização:", error.message);
-        }
-      );
-    } else {
-      console.error("Geolocation não está disponível no navegador.");
+    // Verifica se o mapa já está inicializado e reseta o contêiner, se necessário
+    const container = L.DomUtil.get("map");
+    if (container) {
+      container._leaflet_id = null;
     }
+
+    // Inicializa o mapa
+    const map = L.map("map").setView([-23.55052, -46.633308], 16);
+
+    // Adiciona o TileLayer (camadas de mapas)
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '© OpenStreetMap contributors',
+    }).addTo(map);
+
+    // Configura o ícone padrão do marcador
+    L.Marker.prototype.options.icon = DefaultIcon;
+
+    // Adiciona um marcador e um popup
+    L.marker([-23.55052, -46.633308])
+      .addTo(map)
+      .bindPopup("<b>Localização padrão:</b><br>São Paulo, SP.")
+      .openPopup();
   }, []);
 
   return (
@@ -30,7 +46,7 @@ export default function Home() {
       {/* Cabeçalho */}
       <header className="text-center my-6">
         <img src="/logo.png" alt="Logo" className="mx-auto w-20 h-20" />
-        <h1 className="text-3xl font-bold">CARE IDOSOS</h1>
+        <h1 className="text-3xl font-bold text-black">CARE IDOSOS</h1>
         <p className="text-gray-500">Saúde e bem-estar ao seu alcance</p>
       </header>
 
@@ -39,28 +55,21 @@ export default function Home() {
         <h2 className="text-2xl font-semibold">Emergência</h2>
         <p className="text-gray-500">Segunda-feira, 23 de Setembro de 2024</p>
 
-        {/* Exibir o Google Maps */}
+        {/* Contêiner do Mapa */}
         <div className="my-6">
-          {latitude && longitude ? (
-            <iframe
-              width="100%"
-              height="300"
-              loading="lazy"
-              allowFullScreen
-              className="rounded-md border border-gray-300"
-              src={`https://www.google.com/maps/embed/v1/view?key=YOUR_GOOGLE_MAPS_API_KEY&center=${latitude},${longitude}&zoom=16`}
-              title="Localização Atual"
-            ></iframe>
-          ) : (
-            <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-md">
-              <p className="text-gray-500">Carregando localização...</p>
-            </div>
-          )}
+          <div
+            id="map"
+            style={{ height: "300px", width: "100%" }}
+            className="rounded-md border border-gray-300"
+          ></div>
         </div>
 
         {/* Alternar Localização */}
         <div className="flex items-center my-4">
-          <FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-red-500 text-xl" />
+          <FontAwesomeIcon
+            icon={faMapMarkerAlt}
+            className="mr-2 text-red-500 text-xl"
+          />
           <span className="mr-2 text-black">Permitir localização em tempo real</span>
           <input type="checkbox" className="toggle-checkbox" />
         </div>

@@ -22,7 +22,7 @@ export default function RecursosBemEstar() {
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
       {/* Header */}
-      <div className="text-center my-6 bg-green-100 w-full max-w-md rounded-t-lg p-6">
+      <div className="text-center my-6 w-full max-w-md rounded-t-lg p-6">
         <img src="/logo.png" alt="Logo" className="mx-auto mb-4 w-20 h-20" />
         <h1 className="text-3xl font-bold text-gray-800">CARE IDOSOS</h1>
         <p className="text-gray-600">Saúde e bem-estar ao seu alcance</p>

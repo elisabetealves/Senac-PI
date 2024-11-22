@@ -41,10 +41,10 @@ export default function ContactList() {
       </div>
 
       {/* Lista de Contatos */}
-      <div className="w-full max-w-md space-y-4">
+      <div className="w-full max-w-md">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Seus contatos</h2>
 
-        <ul>
+        <ul className='space-y-4'>
           {contacts.map((contact) => (
             <li key={contact.contactId} className="flex items-center justify-between bg-white rounded-lg shadow-md p-4">
               <span className="ml-3 text-gray-800 font-medium">{contact.name}</span>
