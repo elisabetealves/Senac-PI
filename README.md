@@ -4,7 +4,6 @@
 </h1>
 
 <h1>
-    <br>
     <p style="font-weight: bold;">🧠 Contexto</p>
 </h1>
 
